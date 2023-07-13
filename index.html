@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <title>ArtVista|Virtual Art Gallery</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="ArtVista">
+  <meta name="description" content="This is the official website of ArtVista - Virtual Art Gallery">
+  <meta name="keywords" content="">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css?family=Eczar|Roboto+Condensed" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Grenze&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+    integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+  <style>
+    * {
+      scroll-behavior: smooth;
+    }
+
+    .navbar-nav.navbar-center {
+      position: absolute;
+      left: 50%;
+      transform: translatex(-50%);
+    }
+
+    @media only screen and (min-width: 768px) {
+      body {
+        background-image: url("compressjpeg-1/background-min.jpg");
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        min-height: 100%;
+        min-width: 100%;
+      }
+    }
+
+    @media only screen and (max-width: 768px) {
+      .not-front {
+        overflow-x: hidden;
+      }
+
+      .fixed-bg {
+        background-image: url("compressjpeg-1/background-min.jpg");
+        position: fixed;
+        background-size: cover;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
+    }
+
+    #loader {
+      display: block;
+      background: #fff;
+      /*                background: radial-gradient(#222, #000);*/
+      bottom: 0;
+      left: 0;
+      overflow: hidden;
+      position: fixed;
+      right: 0;
+      top: 0;
+      z-index: 99999;
+    }
+
+    .loader-inner {
+      bottom: 0;
+      height: 60px;
+      left: 0;
+      margin: auto;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 100px;
+    }
+
+    .loader-line-wrap {
+      animation:
+        spin 2000ms cubic-bezier(.175, .885, .32, 1.275) infinite;
+      box-sizing: border-box;
+      height: 50px;
+      left: 0;
+      overflow: hidden;
+      position: absolute;
+      top: 0;
+      transform-origin: 50% 100%;
+      width: 100px;
+    }
+
+    .loader-line {
+      border: 4px solid transparent;
+      border-radius: 100%;
+      box-sizing: border-box;
+      height: 100px;
+      left: 0;
+      margin: 0 auto;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 100px;
+    }
+
+    .loader-line-wrap:nth-child(1) {
+      animation-delay: -50ms;
+    }
+
+    .loader-line-wrap:nth-child(2) {
+      animation-delay: -100ms;
+    }
+
+    .loader-line-wrap:nth-child(3) {
+      animation-delay: -150ms;
+    }
+
+    .loader-line-wrap:nth-child(4) {
+      animation-delay: -200ms;
+    }
+
+    .loader-line-wrap:nth-child(5) {
+      animation-delay: -250ms;
+    }
+
+    .loader-line-wrap:nth-child(1) .loader-line {
+      border-color: hsl(0, 80%, 60%);
+      height: 90px;
+      width: 90px;
+      top: 7px;
+    }
+
+    .loader-line-wrap:nth-child(2) .loader-line {
+      border-color: hsl(60, 80%, 60%);
+      height: 76px;
+      width: 76px;
+      top: 14px;
+    }
+
+    .loader-line-wrap:nth-child(3) .loader-line {
+      border-color: hsl(120, 80%, 60%);
+      height: 62px;
+      width: 62px;
+      top: 21px;
+    }
+
+    .loader-line-wrap:nth-child(4) .loader-line {
+      border-color: hsl(180, 80%, 60%);
+      height: 48px;
+      width: 48px;
+      top: 28px;
+    }
+
+    .loader-line-wrap:nth-child(5) .loader-line {
+      border-color: hsl(240, 80%, 60%);
+      height: 34px;
+      width: 34px;
+      top: 35px;
+    }
+
+    @keyframes spin {
+
+      0%,
+      15% {
+        transform: rotate(0);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    #main-body {
+      transition-delay: 2s;
+      position: relative;
+      -webkit-animation-name: animatebottom;
+      -webkit-animation-duration: 1s;
+      animation-name: animatebottom;
+      animation-duration: 1s
+    }
+
+    @-webkit-keyframes animatebottom {
+      from {
+        bottom: -100px;
+        opacity: 0
+      }
+
+      to {
+        bottom: 0px;
+        opacity: 1
+      }
+    }
+
+    @keyframes animatebottom {
+      from {
+        bottom: -100px;
+        opacity: 0
+      }
+
+      to {
+        bottom: 0;
+        opacity: 1
+      }
+    }
+
+    .ml10 {
+      position: relative;
+      font-weight: 900;
+      font-size: 1.5em;
+    }
+
+    .ml10 .text-wrapper {
+      position: relative;
+      display: inline-block;
+      padding-top: 0.2em;
+      padding-right: 0.05em;
+      padding-bottom: 0.1em;
+      overflow: hidden;
+    }
+
+    .ml10 .letter {
+      display: inline-block;
+      line-height: 1em;
+      transform-origin: 0 0;
+    }
+
+    @media only screen and (min-width: 768px) {
+      .ml5 {
+        position: relative;
+        font-weight: 900;
+        font-size: 5em;
+        color: #402d2d;
+        padding-top: 20%;
+        margin-left: 10%;
+      }
+    }
+
+    @media only screen and (max-width: 768px) {
+      .ml5 {
+        position: relative;
+        font-weight: 900;
+        font-size: 3.5em;
+        color: #402d2d;
+        padding-top: 35%;
+        margin-left: 10%;
+      }
+    }
+
+    .ml5 .text-wrapper {
+      position: relative;
+      display: inline-block;
+      padding-top: 0.1em;
+      padding-right: 0.05em;
+      padding-bottom: 0.15em;
+      line-height: 1em;
+    }
+
+    .ml5 .line {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      height: 4px;
+      width: 100%;
+      background-color: #402d2d;
+      transform-origin: 0.5 0;
+    }
+
+    .ml5 .ampersand {
+      font-family: Baskerville, "EB Garamond", serif;
+      font-style: italic;
+      font-weight: 400;
+      width: 1em;
+      margin-right: -0.1em;
+      margin-left: -0.1em;
+    }
+
+    .ml5 .letters {
+      display: inline-block;
+      opacity: 0;
+    }
+  </style>
+
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+
+
+
+<body>
+  <div class="fixed-bg"></div>
+  <div id="loader">
+    <div class="loader-inner">
+      <div class="loader-line-wrap">
+        <div class="loader-line"></div>
+      </div>
+      <div class="loader-line-wrap">
+        <div class="loader-line"></div>
+      </div>
+      <div class="loader-line-wrap">
+        <div class="loader-line"></div>
+      </div>
+      <div class="loader-line-wrap">
+        <div class="loader-line"></div>
+      </div>
+      <div class="loader-line-wrap">
+        <div class="loader-line"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <button onclick="topFunction()" id="myBtn"><i class="fas fa-angle-up" style="font-size: 20px"></i></button>
+
+  <div id="mySidenav" class="sidenav" style="display:none">
+    <a href="https://www.facebook.com/artGeeksIITM/" id="fb"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://www.instagram.com/canvacreators/" id="insta"><i class="fab fa-instagram"></i></a>
+    <a href="mailto:artgeeks@iitmandi.ac.in" id="mail"><i class="fas fa-envelope"></i></a>
+    <a href="contact.html" id="contact"><i class="fas fa-chevron-right"></i></a>
+  </div>
+  <nav class="navbar navbar-expand-md bg-dark navbar-dark sticky-top">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+      <ul class="nav navbar-nav navbar-left">
+        <li class="nav-item">
+          <a style="color:#48C9B0" class="nav-link" href="index.html">HOME</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-center">
+        <li class="nav-item">
+          <a style="color:#48C9B0" class="nav-link" href="members.html">MEMBER</a>
+        </li>
+        <li class="nav-item">
+          <a style="color:#48C9B0" class="nav-link" href="gallery.html">GALLERY</a>
+        </li>
+        <li class="nav-item">
+          <a style="color:#48C9B0" class="nav-link" href="contact.html">CONTACT US</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto nav-flex-icons  navbar-right">
+        <li class="nav-item">
+          <a style="color:#2E86C1" href="https://www.facebook.com/artGeeksIITM/"
+            class="nav-link waves-effect waves-light">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a style="color:#E74C3C" href="https://www.instagram.com/artgeeks_iitmandi/"
+            class="nav-link waves-effect waves-light">
+            <i class="fab fa-instagram"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a style="color:#FDFEFE" href="mailto:artgeeks@iitmandi.ac.in" class="nav-link waves-effect waves-light">
+            <i class="fas fa-envelope"></i>
+          </a>
+        </li>
+    </div>
+  </nav>
+  <div class="topDiv" id="topDivIndex">
+    <h1 class="ml5">
+      <span class="text-wrapper">
+        <span class="line line1"></span>
+        <span class="letters letters-left">Art</span>
+        <span class="letters letters-right">Vista</span>
+        <span class="line line2"></span>
+      </span>
+    </h1>
+    <p class="ml10" style="margin-left:10%">
+      <span class="text-wrapper">
+        <span class="letters">Virtual Art Gallery</span>
+      </span>
+    </p>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
+  </div>
+  <div class="container-fluid not-front" style="margin-top: 100px;">
+    <h2 class="text-center" style="font-family: 'Roboto Condensed', sans-serif;"><b>About</b></h2>
+
+    <div class="row align-items-center">
+      <div class="col-md-10 offset-md-1 col-sm-12 col-12 content">
+        <div class="text-center" style="opacity: 1;">
+          <p class="mb-0">
+            <b>Art Geeks</b> is the official art club of <b>IIT Mandi</b>. It is the heart of creativity in the
+            college. In a short span, it has successfully established its identity in the college. Each year the club
+            is
+            responsible for new and innovative ways of promoting the art culture in the college.
+          </p>
+        </div>
+      </div>
+    </div>
+
+
+    <h2 style="text-align:center;font-family: 'Roboto Condensed', sans-serif; margin-top:100px"><b>Events</b></h2>
+    <div class="row align-items-center">
+      <div class="col-md-10 offset-md-1 col-sm-12 col-12 content">
+        <h3>
+          <center>Vibgyor</center>
+        </h3>
+        <hr style="border-width: 5px; border-radius: 3px; width:100px; background-color: blueviolet;">
+        <p class="mb-0">
+          <b>Vibgyor</b> is an annual 3 day long intra college art fest of IIT Mandi exclusively organized by Art Geeks
+          to
+          enable all students, faculty, and staff to showcase their artistic talents. It includes various art-related
+          events :</p>
+        <ul>
+          <li>Canvas</li>
+          <li>Sketching</li>
+          <li>Collage Making</li>
+          <li>Stone Painting</li>
+          <li>Painting</li>
+        </ul>
+
+        <br><br>
+        <h3>
+          <center>Exodia</center>
+        </h3>
+        <hr style="border-width: 5px; border-radius: 3px; width:100px; background-color: blueviolet">
+        <p><b>Exodia</b> is the annual cultural and technical fest of IIT Mandi. It have the events organised by all the
+          technical and cultural society of IIT Mandi</p>
+        <p>ArtGeeks has an important contribution in Exodia trough the designing of various stuffs around the campus
+          including 3D models,Photo Booth, Wall Painting.... </p>
+        <p>It organises a number of events like :</p>
+        <ul>
+          <li>Canvas Making</li>
+          <li>Doodle Making</li>
+          <li>Face Painting</li>
+          <li>Live Sketching</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid col-lg-10 col-md-10 col-sm-12 col-xs-12 not-front" style="margin-top: 100px;">
+    <h2 style="text-align:center; margin-top: 40px;font-family: 'Roboto Condensed', sans-serif;"><b>Activities</b></h2>
+    <br>
+    <div>
+      <br><br>
+      <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 embed-responsive embed-responsive-16by9" data-aos="zoom-in">
+          <iframe 
+           src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2FartGeeksIITM%2Fvideos%2F923482341166013%2F&show_text=false&width=560&t=0" 
+           width="560" height="314" style="border:none;overflow:hidden" scrolling="no" frameborder="0" 
+           allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 embed-responsive embed-responsive-16by9" data-aos="zoom-in">
+          <iframe
+            src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2FartGeeksIITM%2Fvideos%2F923482341166013%2F&width=500&show_text=false&height=280&appId&autoplay=false&loop=true"
+            width="560" height="315" style="border:none;overflow:hidden" scrolling="no" frameborder="0"
+            allowTransparency="true" allow="encrypted-media" allowFullScreen="true"></iframe>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 embed-responsive embed-responsive-16by9" data-aos="zoom-in">
+          <iframe width="560" height="315"
+            src="https://www.youtube.com/embed/ogsZuoDVgdM?rel=0&autoplay=0&mute=1&loop=1" frameborder="0"
+            allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+      </div>
+      <br><br>
+    </div>
+    <div class="container-fluid col-lg-10 col-md-10 col-sm-12 col-xs-12" style="margin-top: 100px;">
+      <h2 style="text-align:center; margin-top: 40px;font-family: 'Roboto Condensed', sans-serif;"><b>Member's Zone</b>
+      </h2>
+      <br>
+      <div>
+    
+
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script>
+
+
+  <script>
+    // Wrap every letter in a span
+    $('.ml10 .letters').each(function () {
+      $(this).html($(this).text().replace(/([^\x00-\x80]|\w)/g, "<span class='letter'>$&</span>"));
+    });
+
+    function topAnimation() {
+
+
+      anime.timeline()
+        .add({
+          targets: '.ml10 .letter',
+          //opacity: [0, 1],
+          rotateY: [-90, 0],
+          duration: 900,
+          delay: function (el, i) {
+            return 45 * i;
+          }
+        });
+
+
+      anime.timeline()
+        .add({
+          targets: '.ml5 .line',
+          opacity: [0.5, 1],
+          scaleX: [0, 1],
+          easing: "easeInOutExpo",
+          duration: 700
+        }).add({
+          targets: '.ml5 .line',
+          duration: 600,
+          easing: "easeOutExpo",
+          translateY: function (e, i, l) {
+            var offset = -0.625 + 0.625 * 2 * i;
+            return offset + "em";
+          }
+        }).add({
+          targets: '.ml5 .ampersand',
+          opacity: [0, 1],
+          scaleY: [0.5, 1],
+          easing: "easeOutExpo",
+          duration: 600,
+          offset: '-=600'
+        }).add({
+          targets: '.ml5 .letters-left',
+          opacity: [0, 1],
+          translateX: ["0.5em", 0],
+          easing: "easeOutExpo",
+          duration: 500,
+          offset: '-=300'
+        }).add({
+          targets: '.ml5 .letters-right',
+          opacity: [0, 1],
+          translateX: ["-0.5em", 0],
+          easing: "easeOutExpo",
+          duration: 600,
+          offset: '-=600'
+        })
+      }
+  </script>
+
+
+  <script>
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function () {
+      scrollFunction();
+      scrollFunction2()
+    };
+
+    function scrollFunction() {
+      if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+        document.getElementById("mySidenav").style.display = "block";
+      } else {
+        document.getElementById("mySidenav").style.display = "none";
+      }
+    }
+
+    function scrollFunction2() {
+      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        document.getElementById("myBtn").style.display = "block";
+      } else {
+        document.getElementById("myBtn").style.display = "none";
+      }
+    }
+
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    }
+  </script>
+
+
+  <script>
+    $(function () {
+      setTimeout(function () {
+        $('#loader').fadeOut('slow', function () {
+          $(this).remove();
+          $('#main-body').css('display', 'block');
+        });
+        
+        topAnimation();
+      }, 2000);
+    });
+  </script>
+
+
+</body>
+
+</html>
